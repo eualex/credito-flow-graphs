@@ -5,7 +5,8 @@ import { Clock, DollarSign, Check } from "lucide-react";
 import { Badge } from "../../components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../components/ui/tooltip";
 
-interface ProcessNodeData {
+// Define proper node data type
+export interface ProcessNodeData {
   label: string;
   time?: number;
   value?: number;
@@ -15,6 +16,8 @@ interface ProcessNodeData {
 
 const ProcessNodeComponent = memo(({ id, type, data, selected }: NodeProps<ProcessNodeData>) => {
   const [showDetails, setShowDetails] = useState(false);
+  // Ensure data is properly typed
+  const nodeData = data as ProcessNodeData;
 
   const getBorderColor = () => {
     switch (type) {
@@ -32,7 +35,7 @@ const ProcessNodeComponent = memo(({ id, type, data, selected }: NodeProps<Proce
   };
 
   const getBackgroundColor = () => {
-    if (data.isCompleted) return "bg-green-50";
+    if (nodeData.isCompleted) return "bg-green-50";
     if (selected) return "bg-blue-50";
     return "bg-white";
   };
@@ -53,42 +56,42 @@ const ProcessNodeComponent = memo(({ id, type, data, selected }: NodeProps<Proce
 
       {/* Conteúdo do nó */}
       <div className="p-2 flex flex-col items-center">
-        <div className="font-medium text-sm text-center">{data.label}</div>
+        <div className="font-medium text-sm text-center">{nodeData.label}</div>
         
         <div className="flex space-x-2 mt-2">
-          {data.time && (
+          {nodeData.time && (
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
                   <Badge variant="outline" className="flex items-center space-x-1">
                     <Clock className="h-3 w-3" />
-                    <span>{data.time}min</span>
+                    <span>{nodeData.time}min</span>
                   </Badge>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Tempo estimado: {data.time} minutos</p>
+                  <p>Tempo estimado: {nodeData.time} minutos</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           )}
           
-          {data.value && (
+          {nodeData.value && (
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
                   <Badge variant="outline" className="flex items-center space-x-1">
                     <DollarSign className="h-3 w-3" />
-                    <span>R${data.value}</span>
+                    <span>R${nodeData.value}</span>
                   </Badge>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Valor: R$ {data.value}</p>
+                  <p>Valor: R$ {nodeData.value}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           )}
 
-          {data.isCompleted && (
+          {nodeData.isCompleted && (
             <Badge className="bg-green-500 flex items-center space-x-1">
               <Check className="h-3 w-3" />
               <span>Concluído</span>
@@ -97,9 +100,9 @@ const ProcessNodeComponent = memo(({ id, type, data, selected }: NodeProps<Proce
         </div>
 
         {/* Descrição expandida no hover */}
-        {showDetails && data.description && (
+        {showDetails && nodeData.description && (
           <div className="absolute bg-white border border-gray-200 rounded-md shadow-lg p-2 text-xs w-48 z-10 -bottom-16 left-1/2 transform -translate-x-1/2">
-            {data.description}
+            {nodeData.description}
           </div>
         )}
       </div>

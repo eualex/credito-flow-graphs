@@ -12,17 +12,17 @@ import {
   Connection,
   Edge,
   Node,
+  NodeTypes,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { CreditProcess, ProcessNode } from '../../types/creditProcess';
 import { useToast } from '../../hooks/use-toast';
-import ProcessNodeComponent from './ProcessNodeComponent';
+import ProcessNodeComponent, { ProcessNodeData } from './ProcessNodeComponent';
 import { Button } from '../../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { formatCurrency } from '../../utils/formatters';
 
-// Tipos de nós personalizados
-const nodeTypes = {
+// Define node types correctly
+const nodeTypes: NodeTypes = {
   step: ProcessNodeComponent,
   decision: ProcessNodeComponent,
   document: ProcessNodeComponent,
@@ -82,11 +82,14 @@ const ProcessFlowEditor = ({ process, onProcessUpdate, readOnly = false }: Proce
 
     // Soma o tempo de todos os nós
     nodes.forEach((node) => {
-      if (node.data.time) {
-        newTotalTime += node.data.time;
-      }
-      if (node.data.value) {
-        valueAdjustment += node.data.value;
+      if (node.data && typeof node.data === 'object') {
+        const nodeData = node.data as ProcessNodeData;
+        if (nodeData.time) {
+          newTotalTime += nodeData.time;
+        }
+        if (nodeData.value) {
+          valueAdjustment += nodeData.value;
+        }
       }
     });
 
